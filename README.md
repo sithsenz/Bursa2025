@@ -13,19 +13,7 @@ Projek Python ini menganalisis trend harga saham menggunakan regresi hierarki (`
 * **Pemprosesan Berbilang:** Pool dan ThreadPoolExecutor
 
 ## Struktur Projek
-.
-├── analisis_stat
-│   └── regresi.py
-├── laman_saham
-├── melombong_data.py
-├── menilai_saham.py
-├── menyimpan_laman_htm.py
-├── modulam
-│   └── pencatit_masa.py
-├── pelombongan
-│   └── pelombong.py
-├── requirements.txt
-└── screener_htm
+### project_structure.txt
 
 ## Kebergantungan
 ### requirements.txt
@@ -42,7 +30,7 @@ Projek Python ini menganalisis trend harga saham menggunakan regresi hierarki (`
 
 ## Pemasangan
 
-1.  Klon repositori: `git clone <URL_repositori_anda>`
+1.  Klon repositori: `git clone https://github.com/sithsenz/Bursa2025.git`
 2.  Buat persekitaran maya: `python3 -m venv myenv`
 3.  Aktifkan persekitaran maya: `source myenv/bin/activate`
 4.  Pasang kebergantungan: `pip install -r requirements.txt`
