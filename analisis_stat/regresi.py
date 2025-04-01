@@ -26,6 +26,9 @@ def dapatkan_inlier(df: pd.DataFrame, x: str, y: str) -> np.array:
 
     Returns:
         pd.DataFrame: DataFrame yang mengandungi hanya inlier.
+    
+    Catatan:
+        Amaran UndefinedMetricWarning dihalang dan tidak akan dipaparkan.
 
     Contoh:
         Jika df mengandungi data dengan kolom 'fy' dan 'eps', dan kita ingin
@@ -45,6 +48,31 @@ def dapatkan_inlier(df: pd.DataFrame, x: str, y: str) -> np.array:
 
 
 def dapatkan_min_cerun(df: pd.DataFrame, x: str, y: str, alpha: float) -> float:
+    '''
+    Menghitung nilai cerun minimum dari regresi linear dengan CI.
+
+    Fungsi ini menghitung nilai cerun minimum dari regresi linear yang dilakukan
+    pada data yang diberikan dalam DataFrame. Nilai minimum dihitung dengan melalui
+    pengiraan selang keyakinan nilai cerun yang dihitung.
+
+    Args:
+        df (pd.DataFrame): DataFrame Pandas yang berisi data.
+        x (str): Nama kolom dalam DataFrame yang akan digunakan sebagai variabel tak bersandar.
+        y (str): Nama kolom dalam DataFrame yang akan digunakan sebagai variabel bersandar.
+        alpha (float): Misalnya, 0.05 untuk CI 95%.
+
+    Returns:
+        float: Nilai cerun minimum dari regresi linear.
+
+    Catatan:
+        - Fungsi ini menggunakan fungsi `linregress` dari modul `scipy.stats`
+        untuk menghitung regresi linear.
+        - Fungsi ini menggunakan fungsi `t.ppf` dari modul `scipy.stats` untuk
+        menghitung nilai t-kritikal.
+        - Nilai t-kritikal dihitung menggunakan darjah kebebasan (n-2),
+        di mana n adalah jumlah data.
+        - Selang keyakinan dihitung melalui standard error dari cerun dengan nilai t-kritis.
+    '''
     n: int = len(df)
     ts: float = abs(t.ppf(alpha/2, n-2))
     

@@ -13,7 +13,8 @@ Langkah-langkah utama yang dilakukan:
 3. Melakukan pra-pemprosesan data, termasuk penapisan data berdasarkan tahun.
 4. Menghitung nilai cerun untuk EPS dan DPS menggunakan regresi linear (RANSAC).
 5. Menentukan nilai cerun akhir saham sebagai hasil darab cerun EPS dan DPS.
-6. Cerun akhir (hasil darab) hanya akan positif jika kedua-dua cerun EPS dan DPS adalah positif.
+6. Cerun akhir (hasil darab) hanya akan positif jika kedua-dua cerun EPS dan DPS
+adalah positif.
 7. Menyaring saham-saham dengan nilai cerun akhir positif (dianggap 'bagus').
 8. Mencetak kamus yang mengandungi kod dan nama saham untuk saham-saham 'bagus'.
 
@@ -28,11 +29,10 @@ Catatan:
     - File ini menggunakan modul 'pelombong' untuk ekstrak data HTML dan 'regresi'
       untuk analisis statistik.
     - Variabel global 'tahun_ini' digunakan untuk penapisan data berdasarkan tahun.
-    - Pengiraan cerun hanya dilakukan jika data mencukupi (lebih dari 10 titik data).
+    - Pengiraan inlier hanya dilakukan jika data mencukupi (> 10 data).
+    - Pengiraan cerun hanya dilakukan jika data mencukupi (> min_inlier data).
     - Nilai alpha digunakan dalam fungsi 'dapatkan_min_cerun' dari modul 'regresi'.
 '''
-
-
 import pandas as pd
 
 
@@ -54,11 +54,13 @@ min_inlier: int = eval(input("   min_inlier (~7) = "))
 
 def utama(laman):
     '''
-    Menganalisis data saham dari file HTML dan mengembalikan nama, kod, dan nilai cerun saham.
+    Menganalisis data saham dari file HTML dan mengembalikan nama, kod, dan nilai
+    cerun saham.
 
-    Fungsi ini membaca file HTML yang berisi data saham, mengekstrak nama dan kod saham,
-    dan menghitung nilai cerun berdasarkan data EPS dan DPS. Fungsi ini menggunakan
-    regresi linear untuk menentukan cerun, dan menyaring data berdasarkan tahun.
+    Fungsi ini membaca file HTML yang berisi data saham, mengekstrak nama dan kod
+    saham, dan menghitung nilai cerun berdasarkan data EPS dan DPS. Fungsi ini
+    menggunakan regresi linear untuk menentukan cerun, dan menyaring data berdasarkan
+    tahun.
 
     Args:
         laman (str): Alamat ke file HTML yang berisi data saham.
@@ -67,15 +69,17 @@ def utama(laman):
         tuple: Tuple yang berisi kod (str), nama (str) dan cerun saham (float).
 
     Catatan:
-        - Fungsi ini menggunakan modul 'pelombong' dan 'regresi' untuk ekstrak dan analisis data.
+        - Fungsi ini menggunakan modul 'pelombong' dan 'regresi' untuk ekstrak dan
+        analisis data.
         - Variabel global 'tahun_ini' digunakan untuk menyaring data tahun.
-        - Nilai cerun dihitung hanya jika terdapat lebih dari 10 titik data yang sah.
+        - Variabel global 'min_inlier' digunakan untuk menetapkan jumlah minimum data.
+        - Nilai cerun dihitung hanya jika jumlah data yang sah adalah mencukupi.
         - Nilai cerun EPS dan DPS diatur ke 0.0 jika data tidak mencukupi atau tidak sah.
         - Nilai alpha digunakan dalam fungsi 'dapatkan_min_cerun' dari modul 'regresi'.
 
     Contoh:
-        Jika file 'saham.html' berisi data saham yang sah, fungsi ini akan mengembalikan:
-        ('Nama Saham', 'Kod Saham', 0.15)
+        Jika file 'saham.html' berisi data saham yang sah dan mencukupi, fungsi ini
+        akan mengembalikan: ('Nama Saham', 'Kod Saham', 0.15)
 
         Jika data tidak valid atau tidak mencukupi, fungsi ini akan mengembalikan:
         ('Nama Saham', 'Kod Saham', 0.0)

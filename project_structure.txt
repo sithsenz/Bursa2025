@@ -1,0 +1,14 @@
+.
+├── analisis_stat
+│   └── regresi.py
+├── laman_saham
+├── melombong_data.py
+├── menilai_saham.py
+├── menyimpan_laman_htm.py
+├── modulam
+│   └── pencatit_masa.py
+├── pelombongan
+│   └── pelombong.py
+├── requirements.txt
+└── screener_htm
+

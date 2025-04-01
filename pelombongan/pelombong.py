@@ -50,7 +50,8 @@ def dapatkan_semua_url(laman_screener: str) -> set:
 
 def simpan_laman(url) -> None:
     '''
-    Menyimpan sumber halaman web dari URL yang diberikan ke dalam file HTML menggunakan Playwright.
+    Menyimpan sumber halaman web dari URL yang diberikan ke dalam file HTML menggunakan
+    Playwright.
 
     Fungsi ini mengambil URL, memuatkannya menggunakan Playwright, dan menyimpan sumber
     halaman yang dimuatkan ke dalam file HTML dengan nama yang berdasarkan nombor stok
@@ -174,10 +175,11 @@ def dapatkan_data_eps_dps(sup: BeautifulSoup) -> list:
         - Fungsi ini mengubah data dalam jadual dengan float menggunakan fungsi eval().
     '''
 
-
     df_data: pd.DataFrame = pd.DataFrame(columns=["fy", "eps", "dps"])
 
-    _jadual = sup.find("table", attrs={"class": "financial_reports table table-hover table-sm table-theme"})
+    _jadual = sup.find("table", attrs={
+        "class": "financial_reports table table-hover table-sm table-theme"
+    })
 
     for baris in _jadual.tbody.find_all("tr"):
         lajur= baris.find_all("td")
@@ -195,6 +197,32 @@ def dapatkan_data_eps_dps(sup: BeautifulSoup) -> list:
 
 
 def dapatkan_data_saham(ticker: dict) -> pd.DataFrame:
+    '''
+    Mengambil data saham dari Yahoo Finance dan mengembalikan DataFrame Pandas.
+
+    Fungsi ini mengambil kamus ticker (nama saham) sebagai input, mengambil data
+    saham dari Yahoo Finance selama 3 tahun terakhir, dan mengembalikan data
+    tersebut dalam bentuk DataFrame Pandas.
+
+    Args:
+        ticker (dict): Kamus di mana kunci adalah ticker saham (str) dan
+        nilai adalah nama saham (str).
+
+    Returns:
+        pd.DataFrame: DataFrame Pandas yang berisi data saham dengan lajur:
+            - Date (datetime): Tarikh data saham.
+            - Ticker (str): Ticker saham.
+            - nama (str): Nama saham.
+            - tahun (int): Tahun data dari Date.
+            - bulan (int): Bulan data dari Date.
+            - Close (float): Harga tutup saham.
+
+    Catatan:
+        - Fungsi ini menggunakan modul `yfinance` untuk mengambil data saham.
+        - Data diambil untuk tempoh 3 tahun terakhir.
+        - Data di-stack dan di-reset index untuk merapikan format.
+        - Lajur 'nama', 'tahun', dan 'bulan' ditambahkan untuk memudahkan analisis.
+    '''
     data: pd.DataFrame = yf.Tickers([*ticker]).download(period="3y")
     data = data.stack(future_stack=True).reset_index()
     data["nama"] = data["Ticker"].map(ticker)
