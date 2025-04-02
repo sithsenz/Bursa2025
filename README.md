@@ -13,7 +13,7 @@ Projek Python ini menganalisis trend harga saham menggunakan regresi hierarki (`
 * **Pemprosesan Berbilang:** Pool dan ThreadPoolExecutor
 
 ## Struktur Projek
-### project_structure.txt
+project_structure.txt
 
 ## Kebergantungan
 ### requirements.txt
