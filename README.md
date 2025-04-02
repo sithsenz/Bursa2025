@@ -9,7 +9,7 @@ Projek Python ini menganalisis trend harga saham menggunakan regresi hierarki (`
 * **Pemilihan Saham:** Menggunakan `linregress` dari SciPy untuk memilih saham berdasarkan analisis cerun data EPS dan DPS.
 * **Pra-pemprosesan Boleh Skala:** Standardisasi per-ticker dengan `sklearn.preprocessing`.
 * **Kuantifikasi Ketidakpastian:** Menjana 94% HDI untuk ramalan.
-* **Pengikisan Data Automatik:** PlayWright
+* **Pelombongan Data Secara Automatik:** PlayWright
 * **Pemprosesan Berbilang:** Pool dan ThreadPoolExecutor
 
 ## Struktur Projek
