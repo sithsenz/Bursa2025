@@ -14,12 +14,13 @@ Langkah-langkah utama yang dilakukan:
 4. Menghitung nilai cerun untuk EPS dan DPS menggunakan regresi linear (RANSAC).
 5. Menentukan nilai cerun akhir saham sebagai hasil darab cerun EPS dan DPS.
 6. Cerun akhir (hasil darab) hanya akan positif jika kedua-dua cerun EPS dan DPS
-adalah positif.
+   adalah positif.
 7. Menyaring saham-saham dengan nilai cerun akhir positif (dianggap 'bagus').
-8. Mencetak kamus yang mengandungi kod dan nama saham untuk saham-saham 'bagus'.
+8. Menghasilkan kamus yang mengandungi kod saham sebagai kunci dan nama saham sebagai
+   nilai, dan menyimpan kamus ini ke dalam file 'bursa.env'.
 
-Kamus yang dicetak perlu disalin dan digunakan dalam file 'menilai_saham.py'
-untuk langkah analisis selanjutnya.
+Kamus saham yang bagus yang disimpan dalam 'bursa.env' akan digunakan dalam file
+'menilai_saham.py' untuk langkah analisis selanjutnya.
 
 Fungsi utama dalam file ini:
     utama(laman: str) -> tuple:
@@ -49,7 +50,7 @@ tahun_ini: int = eval(input("   Tahun ini = "))
 
 semua_laman: list = glob("laman_saham/*.htm")
 
-min_inlier: int = eval(input("   min_inlier (~7) = "))
+min_inlier: int = eval(input("   min_inlier (biasanya 7) = "))
 
 
 def utama(laman):
@@ -86,7 +87,7 @@ def utama(laman):
     '''
     cerun_eps: float = 0.
     cerun_dps: float = 0.
-    alpha: float =0.05
+    alpha: float = 0.05
 
     with open(laman, mode="r", encoding="utf-8") as l:
         kandungan = l.read()
@@ -129,12 +130,12 @@ if __name__ == "__main__":
     saham_bagus: dict = {kod: nama for kod, nama, cerun in semua_saham if cerun > 0}
     bil_saham_bagus: int = len(saham_bagus)
 
+    with open("bursa.env", mode="w") as b:
+        b.write(f'ticker = {saham_bagus}')
+
     print(f'''
- Terdapat {bil_saham_bagus} saham yang bagus seperti berikut:
-
-{saham_bagus}
-
- Salin kamus saham yang bagus di atas ke dalam file menilai_saham.py .
+ Terdapat {bil_saham_bagus} saham yang bagus.
+ Kamus saham yang bagus telah disalin ke dalam file Bursa.env.
 
 Nota:
   Sasarkan bilangan saham bagus antara 20 hingga 50.

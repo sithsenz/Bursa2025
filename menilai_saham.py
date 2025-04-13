@@ -6,9 +6,9 @@ model Bayesian Hierarchical yang dibangunkan dengan Bambi untuk meramal harga sa
 dan memberikan cadangan pembelian berdasarkan ramalan tersebut.
 
 Langkah-langkah utama yang dilakukan:
-1. Meminta input tahun dan bulan untuk ramalan.
+1. Meminta input tahun, bulan, draw_tune, dan target_accept untuk ramalan.
 2. Memuat data saham dari file HTML yang telah diproses sebelumnya menggunakan
-modul 'pelombong'.
+   modul 'pelombong'.
 3. Melakukan penskalaan data harga saham menggunakan StandardScaler.
 4. Membangun dan melatih model Bayesian Hierarchical menggunakan Bambi.
 5. Meringkas hasil penemuan model menggunakan ArviZ.
@@ -24,6 +24,8 @@ modul 'pelombong'.
 Fungsi dan modul yang digunakan:
 - bambi: Membangun dan melatih model Bayesian Hierarchical.
 - arviz: Meringkas hasil pembinaan model.
+- ast: Mengubah string literal dari file .env menjadi dictionary.
+- dotenv: Memuatkan variabel lingkungan dari file Bursa.env.
 - sklearn.preprocessing.StandardScaler: Melakukan penskalaan data.
 - tabulate: Mencetak data dalam format jadual.
 - pelombongan.pelombong.dapatkan_data_saham: Memuat data saham dari file HTML.
@@ -33,16 +35,19 @@ Catatan:
 file 'melombong_data.py'.
 
 Output:
-- Jadual yang berisi nama saham, ticker, tahun, bulan, harga ramalan, batas bawah,
-batas atas, harga beli, harga semasa, serta tren tahunan dan bulanan saham.
+- Jadual "Analisis Keseluruhan" yang berisi nama saham, ticker, tahun, bulan, harga ramalan,
+  batas bawah, batas atas, harga beli, harga semasa, serta tren tahunan dan bulanan saham.
+- Jadual "Peluang" yang berisi saham-saham dengan harga semasa di bawah batas bawah ramalan.
 '''
 
 import arviz as az
+import ast
 import bambi as bmb
 import numpy as np
+import os
 import pandas as pd
 
-
+from dotenv import load_dotenv
 from sklearn.preprocessing import StandardScaler
 from tabulate import tabulate
 
@@ -53,8 +58,11 @@ from pelombongan import pelombong
 if __name__ == "__main__":
     tahun: int = input("   Tahun untuk diramal = ")
     bulan: int = input("   Bulan untuk diramal = ")
+    draw_tune: int = eval(input("   Bilangan draw dan tune (biasanya 4000) = "))
+    target_accept: float = eval(input("   Nilai target_accept (biasanya 0.95) = "))
 
-    ticker: dict = {'0101.KL': 'TMCLIFE', '6262.KL': 'INNO', '5246.KL': 'WPRTS', '0002.KL': 'KOTRA', '4006.KL': 'ORIENT', '0128.KL': 'FRONTKN', '0032.KL': 'REDTONE', '0106.KL': 'REXIT', '2828.KL': 'CIHLDG', '0001.KL': 'SCOMNET', '0040.KL': 'OPENSYS', '2836.KL': 'CARLSBG', '7100.KL': 'UCHITEC', '6483.KL': 'KENANGA', '0157.KL': 'FOCUSP', '5819.KL': 'HLBANK', '0151.KL': 'KGB', '9296.KL': 'RCECAP', '2658.KL': 'AJI', '1996.KL': 'KRETAM', '8079.KL': 'LEESK', '3255.KL': 'HEIM', '9172.KL': 'FPI', '1066.KL': 'RHBBANK', '3689.KL': 'F&N', '3069.KL': 'MFCB', '5109.KL': 'YTLREIT', '0012.KL': '3A'}
+    load_dotenv("bursa.env")
+    ticker: dict = ast.literal_eval(os.environ['ticker'])
 
     data: pd.DataFrame = pelombong.dapatkan_data_saham(ticker)
 
@@ -78,7 +86,7 @@ if __name__ == "__main__":
         noncentered=False,
     )
 
-    idata= model.fit(draws=2000, tune=2000, cores=4, target_accept=0.9)
+    idata= model.fit(draws=draw_tune, tune=draw_tune, cores=4, target_accept=target_accept)
 
 # Meringkaskan penemuan daripada model
     ringkasan = az.summary(idata)
